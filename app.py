@@ -55,7 +55,7 @@ with st.sidebar:
     st.markdown("""
     **You are not alone.** If you are in crisis, please reach out to professional help:
     
-    * **Emergency:** 911 (US) / 999 (UK)
+    * **Emergency:** 911 
     * **Suicide & Crisis Lifeline:** 988
     * **Crisis Text Line:** Text HOME to 741741
     
@@ -81,7 +81,7 @@ def load_brain():
 try:
     model, vectorizer = load_brain()
 except FileNotFoundError:
-    st.error("❌ Brain files not found. Please run the Training Notebook first!")
+    st.error("Brain files not found. Please run the Training Notebook first!")
     st.stop()
 
 # SAFETY GUARDRAILS
@@ -153,6 +153,21 @@ def get_wordnet_pos(word):
     return tag_dict.get(tag, wordnet.NOUN)
 
 def clean_input(text):
+    """
+    Preprocesses user input for the model.
+
+    Steps:
+    1. Converts text to lowercase.
+    2. Expands negations (e.g., "n't" -> " not").
+    3. Removes special characters/punctuation.
+    4. Lemmatizes words while removing stopwords.
+
+    Args:
+        text (str): The raw input string from the user.
+
+    Returns:
+        str: The cleaned, lemmatized string ready for vectorization.
+    """
     text = text.lower()
     text = re.sub(r"n't", " not", text)
     text = re.sub(r'[^a-z\s]', '', text)
